@@ -17,7 +17,11 @@ import {
   Code,
   Smartphone,
   BarChart,
-  CheckCircle2
+  CheckCircle2,
+  Users,
+  MessageCircle,
+  Send,
+  Bot
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
@@ -105,6 +109,11 @@ const Navbar = () => {
     { name: 'About', path: '/about' },
     { name: 'Services', path: '/services' },
     { name: 'Products', path: '/products' },
+    { name: 'Communities', path: '/communities', dropdown: [
+      { name: 'Discord', href: 'https://discord.gg/N4Hw6UBW' },
+      { name: 'WhatsApp', href: 'https://chat.whatsapp.com/GQ5tVns2arn5xCsjX7diMb' },
+      { name: 'Instagram', href: 'https://www.instagram.com/glow_bytex_solution.in?igsh=bWdqdGM3d2x4c2Q3' },
+    ]},
     { name: 'Contact', path: '/contact' },
   ];
 
@@ -134,14 +143,45 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              to={link.path}
-              className="text-sm font-medium text-slate-300 hover:text-secondary transition-colors relative group"
-            >
-              {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full" />
-            </Link>
+            <div key={link.name} className="relative group">
+              {link.dropdown ? (
+                <>
+                  <button className="text-sm font-medium text-slate-300 hover:text-secondary transition-colors flex items-center gap-1">
+                    {link.name}
+                    <ChevronRight size={14} className="rotate-90 group-hover:rotate-180 transition-transform" />
+                  </button>
+                  <div className="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <div className="bg-primary/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 w-48 shadow-2xl">
+                      {link.dropdown.map((item) => (
+                        <a 
+                          key={item.name}
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block py-2 px-3 text-sm text-slate-300 hover:text-secondary hover:bg-white/5 rounded-lg transition-all"
+                        >
+                          {item.name}
+                        </a>
+                      ))}
+                      <Link 
+                        to={link.path}
+                        className="block mt-2 pt-2 border-t border-white/10 text-xs font-bold text-secondary hover:text-accent transition-colors"
+                      >
+                        Explore All
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <Link 
+                  to={link.path}
+                  className="text-sm font-medium text-slate-300 hover:text-secondary transition-colors relative"
+                >
+                  {link.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full" />
+                </Link>
+              )}
+            </div>
           ))}
           <a 
             href="https://docs.google.com/forms/d/e/1FAIpQLSdc7R11TEY86CannwhOBtLg64_rwO9MPAlIxHD8hKFMoa5bRg/viewform?usp=publish-editor" 
@@ -486,25 +526,25 @@ const HomePage = () => {
                 icon: Code, 
                 title: <>{'Web '}<span className="text-[0.98em] md:text-[1em]">Development</span></>, 
                 desc: 'Custom web applications built with modern frameworks for maximum performance and scalability.',
-                image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80'
+                image: 'https://picsum.photos/seed/3d-abstract-web/800/600'
               },
               { 
                 icon: Smartphone, 
                 title: 'Mobile Solutions', 
                 desc: 'Native and cross-platform mobile apps that provide seamless user experiences across all devices.',
-                image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80'
+                image: 'https://picsum.photos/seed/3d-abstract-mobile/800/600'
               },
               { 
                 icon: Cpu, 
                 title: 'AI Integration', 
                 desc: 'Leveraging artificial intelligence to automate workflows and provide intelligent insights for your business.',
-                image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80'
+                image: 'https://picsum.photos/seed/3d-abstract-ai/800/600'
               },
               { 
                 icon: Layers, 
                 title: 'UI/UX Design', 
                 desc: 'User-centric design approach focused on creating intuitive and visually stunning digital interfaces.',
-                image: 'https://img.sanishtech.com/u/c14b417687e515d3c6fc0ab180ead682.jpg'
+                image: 'https://picsum.photos/seed/3d-abstract-design/800/600'
               },
             ].map((service, i) => (
               <motion.div
@@ -744,6 +784,39 @@ const HomePage = () => {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Communities CTA Section */}
+      <motion.section 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="section-padding relative overflow-hidden"
+      >
+        <div className="container-custom relative z-10">
+          <div className="glass-dark rounded-[2rem] md:rounded-[3rem] p-6 md:p-20 border-[3px] border-white/40 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-secondary/10 rounded-full blur-[100px] -mr-48 -mt-48" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-emerald-500/10 rounded-full blur-[100px] -ml-48 -mb-48" />
+            
+            <div className="max-w-3xl mx-auto text-center relative z-10">
+              <h2 className="text-2xl md:text-5xl font-bold text-white mb-6">Join Our <span className="text-secondary">Communities</span></h2>
+              <p className="text-slate-300 text-base md:text-lg mb-4">
+                Stay connected with us and be part of our growing network.
+              </p>
+              <p className="text-slate-400 text-sm md:text-base mb-8 leading-relaxed">
+                We share all hiring updates, internships, freelance opportunities, and announcements through our official communities. Join your preferred platform and never miss any update.
+              </p>
+              <Link 
+                to="/communities"
+                className="inline-flex items-center gap-3 bg-secondary hover:bg-accent text-white px-8 py-4 md:px-10 md:py-5 rounded-full font-bold transition-all shadow-xl shadow-secondary/20 hover:shadow-secondary/40 hover:-translate-y-1"
+              >
+                Explore Communities
+                <ArrowRight size={20} />
+              </Link>
+            </div>
           </div>
         </div>
       </motion.section>
@@ -1027,28 +1100,28 @@ const ServicesPage = () => {
       icon: Code,
       desc: 'We build high-performance web applications using the latest technologies like React, Next.js, and Node.js. Our focus is on speed, SEO, and scalability.',
       features: ['Single Page Applications', 'E-commerce Solutions', <>{'Custom CMS '}<span className="text-[0.98em] md:text-[1em]">Development</span></>, 'Progressive Web Apps'],
-      bgImage: 'https://img.sanishtech.com/u/f61938d03c888122d27647aaef39edb1.jpeg'
+      bgImage: 'https://picsum.photos/seed/3d-abstract-web/800/600'
     },
     { 
       title: <>{'Mobile App '}<span className="text-[0.98em] md:text-[1em]">Development</span></>, 
       icon: Smartphone,
       desc: 'Creating seamless mobile experiences for iOS and Android. We specialize in Flutter and React Native for efficient, high-quality cross-platform apps.',
       features: ['Native iOS & Android', 'Cross-Platform Apps', 'Mobile UI/UX Design', 'App Store Optimization'],
-      bgImage: 'https://img.sanishtech.com/u/3fc03539383b3ec4de480719b91b2be8.jpeg'
+      bgImage: 'https://picsum.photos/seed/3d-abstract-mobile/800/600'
     },
     { 
       title: 'AI & Machine Learning', 
       icon: Cpu,
       desc: 'Integrating intelligent features into your products. From chatbots to predictive analytics, we help you leverage the power of AI.',
       features: ['Natural Language Processing', 'Predictive Analytics', 'Computer Vision', 'AI-Driven Automation'],
-      bgImage: 'https://img.sanishtech.com/u/b0056ebe3b391cc04eea48e0f707549c.jpeg'
+      bgImage: 'https://picsum.photos/seed/3d-abstract-ai/800/600'
     },
     { 
       title: 'UI/UX Design', 
       icon: Layers,
       desc: 'User-centric design that converts. We create intuitive interfaces and engaging user journeys that keep your customers coming back.',
       features: ['User Research', 'Wireframing & Prototyping', 'Visual Design', 'Interaction Design'],
-      bgImage: 'https://img.sanishtech.com/u/7e7104ae765e696f0743cd57b7695b93.jpeg'
+      bgImage: 'https://picsum.photos/seed/3d-abstract-design/800/600'
     }
   ];
 
@@ -1444,6 +1517,260 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => (
   </motion.div>
 );
 
+const CommunitiesPage = () => {
+  const communities = [
+    {
+      name: 'Discord Community',
+      desc: 'Join our main hub for hiring updates, internships, freelance projects, and direct interaction with our team.',
+      link: 'https://discord.gg/N4Hw6UBW',
+      icon: <Users className="w-8 h-8" />,
+      color: 'bg-[#5865F2]',
+      cardBg: 'bg-[#5865F2]/10 hover:bg-[#5865F2]/20',
+      borderColor: 'hover:border-[#5865F2]/50'
+    },
+    {
+      name: 'WhatsApp Community',
+      desc: 'Receive quick updates, announcements, and important notifications directly on your phone.',
+      link: 'https://chat.whatsapp.com/GQ5tVns2arn5xCsjX7diMb',
+      icon: <MessageCircle className="w-8 h-8" />,
+      color: 'bg-[#25D366]',
+      cardBg: 'bg-[#25D366]/10 hover:bg-[#25D366]/20',
+      borderColor: 'hover:border-[#25D366]/50'
+    },
+    {
+      name: 'Instagram Community',
+      desc: 'Follow us for updates, insights, and creative content about our work and opportunities.',
+      link: 'https://www.instagram.com/glow_bytex_solution.in?igsh=bWdqdGM3d2x4c2Q3',
+      icon: <Instagram className="w-8 h-8" />,
+      color: 'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]',
+      cardBg: 'bg-[#ee2a7b]/10 hover:bg-[#ee2a7b]/20',
+      borderColor: 'hover:border-[#ee2a7b]/50'
+    }
+  ];
+
+  return (
+    <div className="pt-32 pb-20">
+      <div className="container-custom">
+        <div className="max-w-4xl mx-auto text-center mb-20">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-7xl font-bold text-white mb-8"
+          >
+            Join Our <span className="text-secondary">Communities</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-xl text-slate-400 leading-relaxed"
+          >
+            We believe in building a strong and active community. All our updates, opportunities, and interactions happen through the platforms below. Choose your preferred platform and stay connected with us.
+          </motion.p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+          {communities.map((item, i) => (
+            <motion.div
+              key={item.name}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 + 0.2 }}
+              className={`rounded-[2.5rem] p-10 border-[3px] border-white/10 transition-all duration-300 group backdrop-blur-xl ${item.cardBg} ${item.borderColor}`}
+            >
+              <div className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 transition-transform`}>
+                {item.icon}
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">{item.name}</h3>
+              <p className="text-slate-400 mb-8 leading-relaxed">
+                {item.desc}
+              </p>
+              <a 
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-secondary font-bold hover:text-accent transition-colors"
+              >
+                Join Now <ArrowRight size={18} />
+              </a>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6 }}
+          className="max-w-3xl mx-auto bg-red-500/10 border border-red-500/20 rounded-3xl p-8 text-center"
+        >
+          <div className="flex items-center justify-center gap-3 text-red-500 mb-4 font-bold uppercase tracking-widest text-sm">
+            <Shield size={20} />
+            Important Note
+          </div>
+          <p className="text-slate-300">
+            We do not post hiring updates directly on our website. All opportunities are shared exclusively through our communities.
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+const Chatbot = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { text: "Hi 👋 Welcome to Glow Bytex Solution! How can I help you?", sender: 'bot', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isOpen]);
+
+  const handleSend = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!inputValue.trim()) return;
+
+    const userMsg = { text: inputValue, sender: 'user', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+    setMessages(prev => [...prev, userMsg]);
+    setInputValue('');
+
+    // Bot response logic
+    setTimeout(() => {
+      const lowerInput = userMsg.text.toLowerCase();
+      let botResponse = "Sorry, I couldn't find that information. Please contact support.";
+
+      if (lowerInput.includes('service') || lowerInput.includes('offer') || lowerInput.includes('do you do')) {
+        botResponse = "We specialize in web, software, and AI-enabled solutions. Check out our Services page for more details.";
+      } else if (lowerInput.includes('price') || lowerInput.includes('cost') || lowerInput.includes('pricing')) {
+        botResponse = "Sorry, I couldn't find that information. Please contact support.";
+      } else if (lowerInput.includes('contact') || lowerInput.includes('support') || lowerInput.includes('email') || lowerInput.includes('phone')) {
+        botResponse = "You can reach us at telite87@gmail.com or call us at +91 7810051411. Or visit our Contact page.";
+      } else if (lowerInput.includes('product')) {
+        botResponse = "We offer innovative digital products like GlowCRM and Bytex Analytics. Visit our Products page to learn more.";
+      } else if (lowerInput.includes('about') || lowerInput.includes('who are you')) {
+        botResponse = "Glow Bytex Solution creates scalable, modern, and user-friendly digital products that help businesses grow.";
+      } else if (lowerInput.includes('hi') || lowerInput.includes('hello') || lowerInput.includes('hey')) {
+        botResponse = "Hello! How can I assist you today?";
+      }
+
+      setMessages(prev => [...prev, { text: botResponse, sender: 'bot', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+    }, 1000);
+  };
+
+  return (
+    <div className="fixed bottom-6 right-6 z-[100] font-sans">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.9, originX: 1, originY: 1 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            transition={{ duration: 0.3, type: "spring", stiffness: 250, damping: 20 }}
+            className="absolute bottom-20 right-0 w-[calc(100vw-3rem)] sm:w-96 bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-white/20"
+            style={{ height: '500px', maxHeight: 'calc(100vh - 8rem)' }}
+          >
+            {/* Header */}
+            <div className="bg-primary/95 p-4 flex items-center justify-between border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center border-2 border-white/20 text-white">
+                    <Bot size={20} />
+                  </div>
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-primary"></div>
+                </div>
+                <div>
+                  <h3 className="text-white font-bold text-sm tracking-wide">Glow Bytex Solution</h3>
+                  <p className="text-green-400 text-xs flex items-center gap-1.5 font-medium">
+                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full inline-block animate-pulse"></span> Online
+                  </p>
+                </div>
+              </div>
+              <button onClick={() => setIsOpen(false)} className="text-white/70 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-full">
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Chat Area */}
+            <div className="flex-1 bg-slate-50/50 p-4 overflow-y-auto flex flex-col gap-4 scrollbar-hide">
+              {messages.map((msg, idx) => (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  key={idx} 
+                  className={`flex flex-col max-w-[85%] ${msg.sender === 'user' ? 'self-end items-end' : 'self-start items-start'}`}
+                >
+                  <div className={`px-4 py-2.5 rounded-2xl ${msg.sender === 'user' ? 'bg-secondary text-white rounded-br-sm shadow-md shadow-secondary/20' : 'bg-white text-slate-800 border border-slate-200 rounded-bl-sm shadow-sm'}`}>
+                    <p className="text-sm leading-relaxed">{msg.text}</p>
+                  </div>
+                  <span className="text-[10px] text-slate-400 mt-1.5 px-1 font-medium">{msg.time}</span>
+                </motion.div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Area */}
+            <form onSubmit={handleSend} className="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
+              <input 
+                type="text" 
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Type your message..." 
+                className="flex-1 bg-slate-100 text-slate-800 px-4 py-3 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 transition-all font-medium placeholder:text-slate-400"
+              />
+              <button 
+                type="submit"
+                disabled={!inputValue.trim()}
+                className="w-11 h-11 bg-secondary text-white rounded-full flex items-center justify-center hover:bg-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-secondary/20 hover:shadow-lg hover:shadow-secondary/40 hover:-translate-y-0.5"
+              >
+                <Send size={18} className="ml-0.5" />
+              </button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-14 h-14 bg-secondary rounded-full flex items-center justify-center shadow-xl shadow-secondary/30 text-white relative z-50 overflow-hidden border-2 border-white/20"
+      >
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.div
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 flex items-center justify-center bg-primary"
+            >
+              <X size={24} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="open"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <Bot size={28} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.button>
+    </div>
+  );
+};
+
 const App = () => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
@@ -1495,12 +1822,14 @@ const App = () => {
               <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
               <Route path="/services" element={<PageWrapper><ServicesPage /></PageWrapper>} />
               <Route path="/products" element={<PageWrapper><ProductsPage /></PageWrapper>} />
+              <Route path="/communities" element={<PageWrapper><CommunitiesPage /></PageWrapper>} />
               <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
             </Routes>
           </motion.div>
         </AnimatePresence>
       </main>
       <Footer />
+      <Chatbot />
     </div>
   );
 };
