@@ -89,11 +89,25 @@
     @apply absolute inset-0 z-10 pointer-events-none;
     background: linear-gradient(45deg, rgba(11, 31, 58, 0.6) 0%, transparent 100%);
   }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes wave {

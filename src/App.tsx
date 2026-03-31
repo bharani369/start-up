@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowRight, 
   Shield, 
@@ -23,7 +23,7 @@ import {
   Send,
   Bot
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 
@@ -330,6 +330,26 @@ const Footer = () => {
 // --- Pages ---
 
 const HomePage = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const fullName = formData.get('fullName');
+    const email = formData.get('email');
+    const subject = formData.get('subject');
+    const message = formData.get('message');
+
+    const mailtoSubject = subject ? subject.toString() : `New Message from ${fullName}`;
+    const body = `Name: ${fullName}\nEmail: ${email}\n\nMessage:\n${message}`;
+
+    window.location.href = `mailto:telite87@gmail.com?subject=${encodeURIComponent(mailtoSubject)}&body=${encodeURIComponent(body)}`;
+    setIsSubmitted(true);
+    
+    // Reset after some time
+    setTimeout(() => setIsSubmitted(false), 5000);
+  };
+
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
@@ -345,15 +365,12 @@ const HomePage = () => {
             initial={{ rotateX: 10, scale: 1.1, opacity: 0 }}
             whileInView={{ rotateX: 0, scale: 1, opacity: 0.9 }}
             transition={{ duration: 1.5 }}
-            src="https://img.sanishtech.com/u/4b1e4feae2cffd6ea9b758f0f8ecf267.jpg" 
+            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgYSVJlitOx4UW8hLqRaO2ZcYITv9GKcT3TihCJyz6n2UEZyJg-ha4z4mv7zCIRbAvONC-BGSU0Img-svRQuXeUhpglWOpVsuVaxmW07pfuv1FxrvPndMi0puG8AITmJ5qVRiFc_MMD7wFcPt322Bi_BtrN600_o19ooMmqB_oHiph15lRXJnYX-frRaT3X/s1600/32999190_963702524165.jpg" 
             alt="" 
             className="absolute inset-0 w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
           <div className="image-fade-overlay" />
-          <div className="absolute inset-0 bg-primary/40" />
-          <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px]" />
         </div>
 
         <div className="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -414,6 +431,57 @@ const HomePage = () => {
         </div>
       </motion.section>
 
+      {/* Statistics Section */}
+      <section className="relative py-24 overflow-hidden bg-[#0a1c37] backdrop-blur-lg border-y border-white/10 shadow-2xl">
+        {/* Background Effects */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-[#00E5FF]/5 rounded-full blur-[120px] -translate-y-1/2" />
+          <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-[#7B61FF]/5 rounded-full blur-[120px] -translate-y-1/2" />
+        </div>
+
+        <div className="w-full relative z-10 overflow-hidden">
+          <div className="flex w-full overflow-hidden">
+            <motion.div 
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ duration: 25, ease: "linear", repeat: Infinity }}
+              className="flex flex-nowrap items-center gap-6 md:gap-12 px-6 md:px-12 w-max"
+            >
+              {[
+                { num: "5+", label: "Years of Experience" },
+                { num: "50+", label: "Successful Projects" },
+                { num: "25+", label: "Happy Clients" },
+                { num: "2K+", label: "5 Star Rating Reviews", icon: <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 inline-block mr-1 mb-0.5" fill="currentColor" /> },
+                // Duplicate for seamless infinite auto-scroll
+                { num: "5+", label: "Years of Experience" },
+                { num: "50+", label: "Successful Projects" },
+                { num: "25+", label: "Happy Clients" },
+                { num: "2K+", label: "5 Star Rating Reviews", icon: <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-400 inline-block mr-1 mb-0.5" fill="currentColor" /> }
+              ].map((stat, i) => (
+                <div key={i} className="shrink-0">
+                  <motion.div
+                    whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+                    className="relative group w-44 h-44 md:w-52 md:h-52 rounded-full flex flex-col items-center justify-center cursor-default"
+                  >
+                    {/* Glass Card */}
+                    <div className="absolute inset-[1px] rounded-full bg-white/[0.05] backdrop-blur-xl border border-white/10 flex flex-col items-center justify-center transition-all duration-500 overflow-hidden">
+                      {/* Subtle gradient shine moving across cards */}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all" />
+                      
+                      <div className="relative z-10 text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white via-[#00E5FF] to-[#7B61FF] mb-2 tracking-tight">
+                        {stat.num}
+                      </div>
+                      <div className="relative z-10 text-[12px] md:text-[14px] text-white/80 font-medium text-center px-6 leading-snug">
+                        {stat.icon}{stat.label}
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* About Section */}
       <motion.section 
         initial={{ opacity: 0, y: 50 }}
@@ -427,14 +495,14 @@ const HomePage = () => {
             initial={{ rotateX: 15, scale: 1.1, opacity: 0 }}
             whileInView={{ rotateX: 0, scale: 1, opacity: 0.9 }}
             transition={{ duration: 1.2 }}
-            src="https://img.sanishtech.com/u/3fdfda60e0b2d3e86bfeda9308667322.jpg" 
+            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjlpsb5duBxzi5_d3y4u9RAJyt3KRBbJ4pxPUA73lVScxDp2QOEamuYx45mhrNI65feIsgWQ6AYs8-Z6WxSHhyphenhyphen3JUMwddyig7H0sHH3_VZ73iSZzMBqBEHCSe5dCiSW42hdcezrVPOuGPXSqc084N0gphUZoLnoVFDlWZaIIm1WtlVoTTT7-Wg72psBBCWB/s1600/419638525_95cfd757-c289-420a-9868-7cf82f45ee92.jpg" 
             alt="" 
             className="absolute inset-0 w-full h-full object-cover"
             referrerPolicy="no-referrer"
             loading="lazy"
           />
           <div className="image-fade-overlay" />
-          <div className="absolute inset-0 bg-primary/30" />
+          <div className="absolute inset-0 bg-primary/60 backdrop-blur-md" />
         </div>
         <div className="container-custom relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -471,16 +539,16 @@ const HomePage = () => {
             >
               <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl">
                 <img 
-                  src="https://img.sanishtech.com/u/133175ca2752b1155321eceb48bda215.jpeg" 
+                  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjhQHbjkOH7pyL609XumM6KHUhWLZIOKysnDpCJY75OTbJhLncfNBEm9VOgUQASmnmpWrSZl-6puiZEBq5wo1Lfp4G88d29Wmnh6NZ9WMLuZjUP3UKNrTZ63HW9rqAdfCb5fPDO4OCnveSTOm-ihf41kaV2vY4PBGPB5zKYe_XveUeu5KpvUv5fwc6-ky1p/s1600/WhatsApp%20Image%202026-03-28%20at%2011.04.55%20AM%20(1).jpeg" 
                   alt="Bharanidharan P - Founder" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                   loading="lazy"
                 />
               </div>
-              <div className="absolute -bottom-10 -right-10 glass p-8 rounded-2xl shadow-2xl hidden md:block">
-                <div className="text-4xl font-bold text-primary mb-1">10+</div>
-                <div className="text-sm text-slate-500 uppercase tracking-widest font-bold">Projects Delivered</div>
+              <div className="absolute -bottom-4 -right-4 md:-bottom-10 md:-right-10 bg-white p-5 md:p-8 rounded-2xl shadow-2xl z-10">
+                <div className="text-3xl md:text-4xl font-bold text-primary mb-1">50+</div>
+                <div className="text-xs md:text-sm text-slate-500 uppercase tracking-widest font-bold">Projects Delivered</div>
               </div>
             </motion.div>
           </div>
@@ -526,25 +594,25 @@ const HomePage = () => {
                 icon: Code, 
                 title: <>{'Web '}<span className="text-[0.98em] md:text-[1em]">Development</span></>, 
                 desc: 'Custom web applications built with modern frameworks for maximum performance and scalability.',
-                image: 'https://picsum.photos/seed/3d-abstract-web/800/600'
+                image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800'
               },
               { 
                 icon: Smartphone, 
-                title: 'Mobile Solutions', 
+                title: 'App Development', 
                 desc: 'Native and cross-platform mobile apps that provide seamless user experiences across all devices.',
-                image: 'https://picsum.photos/seed/3d-abstract-mobile/800/600'
+                image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800'
               },
               { 
                 icon: Cpu, 
                 title: 'AI Integration', 
                 desc: 'Leveraging artificial intelligence to automate workflows and provide intelligent insights for your business.',
-                image: 'https://picsum.photos/seed/3d-abstract-ai/800/600'
+                image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=800'
               },
               { 
                 icon: Layers, 
                 title: 'UI/UX Design', 
                 desc: 'User-centric design approach focused on creating intuitive and visually stunning digital interfaces.',
-                image: 'https://picsum.photos/seed/3d-abstract-design/800/600'
+                image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=800'
               },
             ].map((service, i) => (
               <motion.div
@@ -794,8 +862,20 @@ const HomePage = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="section-padding relative overflow-hidden"
+        className="section-padding relative overflow-hidden perspective-1000 bg-[#0a1e38]"
       >
+        <div className="absolute inset-0 z-0">
+          <motion.img 
+            initial={{ rotateX: 15, scale: 1.1, opacity: 0 }}
+            whileInView={{ rotateX: 0, scale: 1, opacity: 0.6 }}
+            transition={{ duration: 1.2 }}
+            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj6VBqFpjgUKiM74DBzZiTwYlmDyl2UAnecUJy6dmIQbzGnZbnEPZZHqN2MJaw5X_x89HKUE119JQ3-9oN2n1fP7tXTueQXtG5n-ldnuymt-8yX144EKxTI9HogoS34kNnJ5S1yxxthjK-d00leFjUGqwQ0wvefvuEEx6_SIUxWfg3XjVwdk1IpGjaK-TMJ/s1600/WhatsApp%20Image%202026-03-31%20at%201.29.42%20PM%20(1).jpeg" 
+            alt="" 
+            className="absolute inset-0 w-full h-full object-contain md:object-cover object-center"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-[#0a1e38]/70" />
+        </div>
         <div className="container-custom relative z-10">
           <div className="glass-dark rounded-[2rem] md:rounded-[3rem] p-6 md:p-20 border-[3px] border-white/40 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-secondary/10 rounded-full blur-[100px] -mr-48 -mt-48" />
@@ -874,27 +954,34 @@ const HomePage = () => {
               </div>
               
               <div className="rounded-3xl p-8 md:p-10 shadow-2xl border-[3px] border-white/40">
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-white">Full Name</label>
-                      <input type="text" className="w-full px-4 py-3 rounded-xl border border-white/40 text-white focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="John Doe" />
+                      <input name="fullName" type="text" required className="w-full px-4 py-3 rounded-xl border border-white/40 text-white focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="John Doe" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-white">Email Address</label>
-                      <input type="email" className="w-full px-4 py-3 rounded-xl border border-white/40 text-white focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="john@example.com" />
+                      <input name="email" type="email" required className="w-full px-4 py-3 rounded-xl border border-white/40 text-white focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="john@example.com" />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-white">Subject</label>
-                    <input type="text" className="w-full px-4 py-3 rounded-xl border border-white/40 text-white focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Project Inquiry" />
+                    <input name="subject" type="text" required className="w-full px-4 py-3 rounded-xl border border-white/40 text-white focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Project Inquiry" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-white">Message</label>
-                    <textarea className="w-full px-4 py-3 rounded-xl border border-white/40 text-white focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all h-32" placeholder="Tell us about your project..." />
+                    <textarea name="message" required className="w-full px-4 py-3 rounded-xl border border-white/40 text-white focus:outline-none focus:ring-2 focus:ring-secondary/20 transition-all h-32" placeholder="Tell us about your project..." />
                   </div>
-                  <button className="w-full bg-secondary hover:bg-accent text-white py-4 rounded-xl font-bold transition-all shadow-lg shadow-secondary/20">
-                    Send Message
+                  <button 
+                    type="submit"
+                    className={`w-full py-4 rounded-xl font-bold transition-all shadow-lg ${
+                      isSubmitted 
+                        ? 'bg-green-500 text-white shadow-green-500/20' 
+                        : 'bg-secondary hover:bg-accent text-white shadow-secondary/20'
+                    }`}
+                  >
+                    {isSubmitted ? 'Message Sent!' : 'Send Message'}
                   </button>
                 </form>
               </div>
