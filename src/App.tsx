@@ -12,6 +12,8 @@ import {
   Menu, 
   X, 
   ChevronRight,
+  Plus,
+  Minus,
   Star,
   Layers,
   Code,
@@ -36,38 +38,21 @@ const Preloader = () => {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
-      className="fixed inset-0 z-[100] bg-primary flex flex-col items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-[100] bg-transparent flex flex-col items-center justify-center overflow-hidden pointer-events-none"
     >
-      <div className="relative">
-        {/* Neon Glow Rings */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="w-32 h-32 rounded-full border-2 border-transparent border-t-secondary border-r-secondary/30 shadow-[0_0_20px_rgba(242,125,38,0.3)] will-change-transform"
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center"
+      >
+        <img 
+          src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQgGhlQRJgP05tQh4GTVgnDWzmUpPyOwx4tbAdPNDBgqcyyIIYbNXVKZ5om6vptAofuQMhCXddsPQlDBf-Iln154aIAGUp_yB57x7bNgTUxxySuRfLZzZ1t3ylJdrtGPb6O2ELrvF0y3uvLuEI3FDDG_DBVDEQaUvwOVmmb151V62WwtJejcUuKpGXhPWD/s568/ezgif-408757a90ed818e4.gif" 
+          alt="Loading..." 
+          className="w-full h-full object-contain"
+          referrerPolicy="no-referrer"
         />
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 w-32 h-32 rounded-full border-2 border-transparent border-b-emerald-500 border-l-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.3)] will-change-transform"
-        />
-        
-        {/* Logo in center */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-          >
-            <img 
-              src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh5on32bGl7YA7bcBYHedr1VaIh9OxvGfxjetcjW7rgh6EX31oDZYaYRq1Dv5Q4c7Zwkpjzv2ApfTqUxjHlNmcI8Wk2zhN199lxR8w5kh_xY3jRhp_kapjRRnban5EFWOmbxStEHOZeST3OMmBOngGTPtQm6Az65rByEoT2RNJSYDB7YIpoKjf-HcBRNl8Y/s1600/Picsart_26-03-31_14-53-55-239.png" 
-              alt="Logo" 
-              className="w-12 h-12 object-cover rounded-lg"
-              referrerPolicy="no-referrer"
-            />
-          </motion.div>
-        </div>
-      </div>
+      </motion.div>
       
       <motion.div
         initial={{ y: 20, opacity: 0 }}
@@ -241,6 +226,26 @@ const Navbar = () => {
 };
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const subscribeNewsletter = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setStatus('loading');
+    
+    // Mock API call
+    setTimeout(() => {
+      setStatus('success');
+      setEmail('');
+      
+      setTimeout(() => {
+        setStatus('idle');
+      }, 3000);
+    }, 1500);
+  };
+
   return (
     <footer className="relative text-white pt-24 pb-12 border-t border-white/10 overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -252,6 +257,57 @@ const Footer = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
       </div>
+
+      <div className="container-custom relative z-10 mb-16">
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="max-w-xl">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">Stay in the Loop</h3>
+            <p className="text-slate-400">Join our newsletter to receive the latest insights on tech, digital transformation, and business automation.</p>
+          </div>
+          
+          <form onSubmit={subscribeNewsletter} className="w-full md:w-auto flex-1 max-w-md relative">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <input 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address" 
+                  required
+                  disabled={status === 'loading' || status === 'success'}
+                  className="w-full bg-white/10 border border-white/20 text-white placeholder:text-slate-400 px-6 py-3.5 rounded-full focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all disabled:opacity-50"
+                />
+              </div>
+              <button 
+                type="submit" 
+                disabled={status === 'loading' || status === 'success'}
+                className="bg-secondary hover:bg-white text-primary px-8 py-3.5 rounded-full font-bold transition-all shadow-lg shadow-secondary/20 hover:shadow-secondary/40 whitespace-nowrap disabled:opacity-50 flex items-center justify-center min-w-[140px]"
+              >
+                {status === 'loading' ? (
+                  <span className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+                ) : status === 'success' ? (
+                  <span className="flex items-center gap-2"><CheckCircle2 size={18} /> Subscribed</span>
+                ) : (
+                  'Subscribe'
+                )}
+              </button>
+            </div>
+            <AnimatePresence>
+              {status === 'success' && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute -bottom-8 left-0 right-0 text-emerald-400 text-sm font-medium text-center"
+                >
+                  Welcome aboard! Thanks for subscribing.
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </form>
+        </div>
+      </div>
+
       <div className="container-custom relative z-10 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
         <div className="col-span-1 md:col-span-1">
           <Link to="/" className="flex items-center gap-2 mb-6">
@@ -338,6 +394,38 @@ const Footer = () => {
 };
 
 // --- Pages ---
+
+const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <div className="border border-white/20 rounded-2xl bg-[#0B1F3A]/60 backdrop-blur-md overflow-hidden transition-all duration-300 shadow-xl mb-4">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+      >
+        <span className="font-bold text-white text-lg pr-4">{question}</span>
+        <div className={`w-8 h-8 shrink-0 rounded-full bg-secondary/10 flex items-center justify-center text-secondary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+          {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+        </div>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="px-6 pb-5 text-slate-300 leading-relaxed border-t border-white/10 mt-2 pt-4">
+              {answer}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const HomePage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -439,7 +527,7 @@ const HomePage = () => {
             <div className="relative z-10 glass rounded-[2.5rem] p-4 border-white/40 shadow-2xl animate-float overflow-hidden">
               <div className="aspect-square rounded-[2rem] overflow-hidden bg-white relative group pt-[90px]">
                 <img 
-                  src="https://img.sanishtech.com/u/e44dab50af78ac74409f36120b31bdea.jpeg" 
+                  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjpOCZdJApoWFK_G4uwT_tW6H1h-T9YyAnP67AR8DJcC0NBgNN4R9wSldU3D_EGu5UqL-dLquI2N3X47yoYmWkAZsa9qq3TYWA2rV-PHGFtl1upbbmG-lmG6Zu-zxtppbMnxD-thrMrxuBrkHrUdAjJfuU3Mico-7tBeuZZx7P8lckA67zbH_b12PpLalqY/s1080/WhatsApp%20Image%202026-03-28%20at%2011.04.56%20AM%20(1).jpeg" 
                   alt="Glow Bytex Solution Visual" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   referrerPolicy="no-referrer"
@@ -903,6 +991,52 @@ const HomePage = () => {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* FAQ Section */}
+      <motion.section 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+        className="section-padding relative overflow-hidden bg-primary/40" id="faq"
+      >
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[120px]" />
+        </div>
+        
+        <div className="container-custom relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white tracking-tight">Frequently Asked <span className="text-secondary">Questions</span></h2>
+            <p className="text-slate-400 text-lg md:text-xl">
+              Everything you need to know about our services, process, and billing. Can't find the answer you're looking for? Feel free to to contact us.
+            </p>
+          </div>
+
+          <div className="max-w-3xl mx-auto">
+            <FAQItem 
+              question="What services does Glow Bytex Solution provide?" 
+              answer="We specialize in custom web development, scalable mobile applications, AI & automation integration (like chatbot integration), cloud architecture, and comprehensive digital transformation consulting." 
+            />
+            <FAQItem 
+              question="How long does it take to deliver a project?" 
+              answer="Delivery timelines depend on the project's complexity. A standard web application or showcase website usually takes 3 to 6 weeks, whereas complex SaaS products or AI integrations might take 2 to 4 months. We provide a detailed timeline during the discovery phase." 
+            />
+            <FAQItem 
+              question="What is your pricing and business model?" 
+              answer="We offer flexible pricing models: fixed-price contracts for well-defined projects, and time-and-materials for evolving scopes. The exact cost is determined after a free initial consultation to understand your requirements." 
+            />
+            <FAQItem 
+              question="Do you provide ongoing support after deployment?" 
+              answer="Absolutely! We provide post-deployment maintenance, bug fixes, performance monitoring, and feature updates. We usually offer a 30-day warranty period after launch, followed by custom SLA maintenance packages." 
+            />
+            <FAQItem 
+              question="How do you handle project communication?" 
+              answer="We use agile methodologies and keep you in the loop with weekly progress reports. We communicate via Slack, Discord, Google Meet, and email, ensuring full transparency throughout the development cycle." 
+            />
           </div>
         </div>
       </motion.section>
@@ -2335,6 +2469,41 @@ Always act as the official Glow bytex solution assistant. Keep responses aligned
   );
 };
 
+const CookieBanner = () => {
+  const [isVisible, setIsVisible] = useState(true);
+
+  if (!isVisible) return null;
+
+  return (
+    <motion.div
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 z-50 p-4 max-w-sm"
+    >
+      <div className="bg-slate-900/90 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-2xl relative">
+        <h4 className="text-white font-bold mb-2 text-lg">Cookie Notice</h4>
+        <p className="text-sm text-slate-300 mb-6 font-medium">
+          We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.
+        </p>
+        <div className="flex flex-col gap-3">
+          <button 
+            onClick={() => setIsVisible(false)}
+            className="w-full px-5 py-2.5 rounded-full text-sm font-bold bg-secondary text-primary hover:bg-white transition-colors shadow-lg shadow-secondary/20"
+          >
+            Accept All
+          </button>
+          <button 
+            onClick={() => setIsVisible(false)}
+            className="w-full px-5 py-2.5 rounded-full text-sm font-bold text-white border border-white/20 hover:bg-white/10 transition-colors"
+          >
+            Decline
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const App = () => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
@@ -2393,6 +2562,7 @@ const App = () => {
         </AnimatePresence>
       </main>
       <Footer />
+      <CookieBanner />
       <Chatbot />
     </div>
   );

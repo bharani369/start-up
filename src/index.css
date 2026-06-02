@@ -42,7 +42,7 @@
     @apply font-sans text-slate-300 bg-primary selection:bg-secondary/30 antialiased min-h-screen;
     line-height: 1.6;
     background-image: linear-gradient(rgba(11, 31, 58, 0.9), rgba(11, 31, 58, 0.95)), url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80');
-    background-attachment: fixed;
+    background-attachment: scroll;
     background-size: cover;
     background-position: center;
   }
